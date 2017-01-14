@@ -13,6 +13,7 @@ Assume you have the dictionary code, code['2'] = ['A', 'B', 'C']
 """
 
 dictionary = ['ADAM', 'APPLE', 'GILD', 'GOLD', 'GOLF', 'HOLD', 'HOLE']
+dictionary = set(dictionary)
 code = {}
 code['0'] = []
 code['1'] = []
@@ -27,12 +28,7 @@ code['9'] = ['W', 'X', 'Y', 'Z']
 
 
 def decode(number):
-    words = []
-    first_letters = code[number[0]]
-    for l in first_letters:
-        words.append(l)
-
-    number = number[1:]
+    words = ['']
     while len(number)>0:
         digit = number[0]
         letters  = code[digit]
@@ -45,10 +41,7 @@ def decode(number):
             words.append(w) #words.extend()
         number = number[1:]
     print words
-    valid_words  =[]
-    for w in words:
-        if w in dictionary:
-            valid_words.append(w)
-    print "Valid words: ",valid_words #= [w if w in voc]
+    words = set(words) #valid_words  = [w for w in (dictionary & words)]
+    return (dictionary & words) # sets intersection
 
-decode('4653')
+print decode('4653')
