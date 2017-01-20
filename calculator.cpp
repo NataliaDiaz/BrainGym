@@ -7,8 +7,8 @@ using namespace std;
 
 /**
 A calculator that evaluates expressions with only positive numbers, no parenthesis, and + and * operations.
-Functions suchs as  are not allowed to be used.
-
+Functions suchs as atoi, itoa or std::to_string are not allowed to be used.
+TODO: what's best than to_string?
 **/
 
 int str2int(string s){
