@@ -34,14 +34,18 @@ int evaluate(string equation)
   string rest_left, rest_right;
   while (found != -1)//std::string::npos)
   {
-    // resolve all multiplications
+    // 1. Resolve all multiplications first
     part1 = equation.substr(0, found);
     part2 = equation.substr(found+1, equation.length()-1);
-    //cout << "\n part 1 and 2: "<< part1 << " "<< part2;
     int left = found-1;
+
+    // Find operator 1: find up to what number we need to parse
+    // find delimiter next symbol (or end of expression) to the left of the operator *
     while (equation[left] != '+' && equation[left]!= '*' && left >=0){
       left--;
     }
+    // leave the remaining left part of the expression for further processing in recursive call
+    // if we reached the beginning of the expression, there is no remaining expression to process further
     if ((unsigned)left <=0){
       rest_left.clear();
     }
@@ -50,10 +54,14 @@ int evaluate(string equation)
     }
     op1 = str2int(equation.substr(left+1, found));
 
+    // Find operator 2: find up to what number we need to parse
+    // find delimiter next symbol (or end of expression) to the right of the operator *
     int right = found+1;
     while (part2[right] != '+' && part2[right] != '*' && (unsigned)right < sizeof(equation)){
       right++;
     }
+    // leave the remaining right part of the expression for further processing in recursive call
+    // if we reached the end of the expression, there is no remaining expression to process further
     if ((unsigned)right >= equation.length()){
       rest_right.clear();
     }
@@ -61,12 +69,15 @@ int evaluate(string equation)
       rest_right = equation.substr(right, equation.length()-1);
     }
     op2 = str2int(equation.substr(found+1, right));
+
+    // Once we got delimiters to get operand1 and operand2, substitute in the expression the result
+    // of the multiplication and process the rest
     equation = rest_left + std::to_string(op1*op2) + rest_right;
     //cout << "\n multiplying  "<< op1 << " "<< op2<< "="<< std::to_string(op1*op2);
     found = equation.find_first_of("*");
   }
 
-  // Multiplications solved!, now  resolve sums
+  // 2. Multiplications solved!, now  resolve sums
   found = equation.find_first_of("+");
   if (found!= -1)//std::string::npos)
   {

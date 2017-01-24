@@ -24,7 +24,8 @@ def bracket_match(bracket_string):
     elif bracket_string =='':
         return 0
     else:# if bracket_string.startswith(')') or bracket_string.startswith('(('):
-        # adding ( at the beginning = cost of adding 1 plus the cost of processing the rest of the expression
+        # adding ( at the beginning = cost of adding 1 plus the cost of processing
+        # the rest of the expression
         return 1 + bracket_match(bracket_string[1:])
 
 bracket_match("(()())")#	0
