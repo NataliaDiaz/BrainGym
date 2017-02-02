@@ -38,6 +38,9 @@ print next_server_number([])
 
 
 """
+Part 2:
+  https://gist.github.com/antifuchs/dd5344b60693dd1d073b
+
 Server names consist of an alphabetic host type (e.g. "apibox") concatenated with the server number, with server numbers allocated as before (so "apibox1", "apibox2", etc. are valid hostnames).
 
 Write a name tracking class with two operations, allocate(host_type) and deallocate(hostname). The former should reserve and return the next available hostname, while the latter should release that hostname back into the pool.
