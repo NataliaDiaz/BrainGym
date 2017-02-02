@@ -1,0 +1,85 @@
+"""
+Machine learning in crisis times
+
+Had we known what our citizens think and what their political inclinations are, we would have not been
+as surprised as we are after the elections. This shows we have the data and the computing power,
+but machine learning is still in primary school. Maybe it is time to squeeze our ML techniques to
+face today’s worlds problems.
+
+If you get the following data tables (with size in #records) regarding elections and debate forums,
+What features you would use, how you would combine them, and what derived features would you use to
+make a prediction model that can be very accurate predicting less popular minoritary candidates
+(in our case for last elections, other than Trump and Hilary voters)?
+Data can be huge if you account for the size of each table, and after normalizing each feature
+(dummy creation of categorical variables), we can have thousands of them.
+
+If the output of the model would be the profile_id of the user, and its candidate_id, what models would
+you use, and if minority party A and minority party B would be predicted instead as
+of Hilary and Trumps' voters, instead, how could we fix the model?
+"""
+
+   * positions - 100k   # table about a issue being decided. E.g. Body: Prohibiting abortion. Topic: Healthcare
+       * body
+       * topic
+       * timestamp
+       # I assume a position_id is understood to be here
+   * position responses - 1.5m  # Table regarding position statements about each user (profile_id)
+       * position id
+       * profile id
+       * timestamp
+       * agreement (boolean)
+   * vote pledges - 200k   # Table containing "simulation" of pre-election interest shown.
+       * profile id
+       * candidate id
+       * timestamp
+   * voter records - 100m  # Table with demographics about each user (profile_id)
+       * address
+       * profile_id (only for 500k users)
+       * voting history (general, primary)
+       * party affiliation
+       * contact information
+       * mortgage information
+       * income information
+       * ethnicity information
+       * charitable donation information
+
+#############
+PROPOSAL SOLUTION:
+Input features of the vote prediction model:
+    -body
+    -topic
+    -agreement
+    -profile_id
+    -candidate_id_pledge  # may be null
+    -candidate_id_vote
+    -address
+    -party_affi
+    -mortgage_info
+    -income_info
+    -ethnicity
+    -charity
+
+
+### Obtaining the data joining tables
+opinions = pd.join(positions, position_responses, on=position_id)
+pledges = pd.join(pledges, opinions, on= profile_id)
+# next we right join with the pledges, preserving all information from the records (which contains all demographics that can help do the voting prediction).
+vote = pd.right_join(pledges, records, on=profile_id)
+
+
+After doing recursive feature elimination, or correlation analysis, or applying regularization (Lasso, Ridge or best, elastic net) we will have removed
+ co-linearities or correlated features to simplify our model with the most predictive features.
+
+As secondary parties other than Hilary Clinton's and Trump's are our focus of prediction in which we want to get high precision and accuracy,
+we need to make sure that the output class (candidate_id) is balanced.
+What other techniques than downsampling (Hilary and Trump's candidate_ids) would you use in this case?
+
+If we end up with the order of 5K features (after having one-hot encoding dummy variables for all our
+data, discretizing, etc.), what method would you try first if you have limited time and resources:
+- Logistic regression with different regularization (e.g. starting with elastic net to balance the amount of
+L1 and L2 norms as penalization terms)
+- Random forests
+
+This is a case where interpretability is not a main requirement and thus, bagging and boosting (specially for the imbalanced dataset issue)
+could be enhancing methods, to upgrade the power of random forest and provide the state of the art in
+prediction accuracy. Would you try something else and why?
